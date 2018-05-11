@@ -5,28 +5,33 @@ import java.util.List;
 
 public class Hand {
 	
-	List<Card> playerHand = new ArrayList();
+	List<Card> hand = new ArrayList<Card>();
 	Deck deckHolder = new Deck();
 	
 	public Hand() {
 	}
 
 	public int getHandValue() {
-		return -1;
+		int handCount;
+		for (Card card : hand) {
+			Rank count = card.getRank();
+		}
+		return handCount;
 	}
 	
-	public void addCard() {
-		playerHand.add(deckHolder.dealCard());
-		playerHand.add(deckHolder.dealCard());
+	public List<Card> addCard() {
+		hand.add(deckHolder.dealCard());
+		return hand;
 	}
 	
 	public void clearHand() {
-		
+		hand = null;
 	}
 	
 	public List<Card> getCards(){
-		List<Card> cards = new ArrayList<>();
-		return cards;
+		
+		hand.add(deckHolder.dealCard());
+		return hand;
 	}
 	
 	

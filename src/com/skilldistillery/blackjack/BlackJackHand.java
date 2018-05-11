@@ -1,5 +1,8 @@
 package com.skilldistillery.blackjack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlackJackHand {
 
 	public BlackJackHand() {
@@ -14,11 +17,28 @@ public class BlackJackHand {
 	
 	public void run() {
 		Deck deck = new Deck();
+		List<Card> playerHand = new ArrayList<>();
+		List<Card> dealerHand = new ArrayList<>();
 		
 		deck.shuffle();
 		
 		Card cardCheck = deck.dealCard();
+		
+		
+		playerHand.add(deck.dealCard());
+		dealerHand.add(deck.dealCard());
+		playerHand.add(deck.dealCard());
+		dealerHand.add(deck.dealCard());
+		
+		System.out.println();
+		
+		
+		
 		System.out.println(cardCheck.toString());
+		System.out.println(playerHand.toString());
+		System.out.println(dealerHand.toString());
+		
+		
 	}
 
 }
