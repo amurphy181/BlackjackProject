@@ -28,10 +28,7 @@ public class HandTests {
 
 	@Test
 	public void test_for_blackjack_win() {
-		List<Card> hand;
-		hand.add(h)
-		Card card1 = h.
-		assertThat(true, h.blackJackWin(hand));
+		
 		fail("Not yet implemented");
 	}
 

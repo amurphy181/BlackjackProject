@@ -34,20 +34,5 @@ public class Hand {
 		return hand;
 	}
 
-	public boolean blackJackWin(List<Card> hand) {
-		Rank firstDealerCard = hand.get(0).getRank();
-		Rank secondDealerCard = hand.get(1).getRank();
-		if ((firstDealerCard.equals(Rank.ACE)) || (firstDealerCard.equals(Rank.KING))
-				|| (firstDealerCard.equals(Rank.QUEEN)) || (firstDealerCard.equals(Rank.JACK))
-				|| (firstDealerCard.equals(Rank.TEN))) {
-			if ((!secondDealerCard.equals(firstDealerCard.value)) && ((firstDealerCard.equals(Rank.ACE))
-					|| (firstDealerCard.equals(Rank.KING)) || (firstDealerCard.equals(Rank.QUEEN))
-					|| (firstDealerCard.equals(Rank.JACK)) || (firstDealerCard.equals(Rank.TEN)))) {
-				String blackJackWin = "Blackjack!!";
-				System.out.println(blackJackWin);
-				return true;
-			}
-		} return false;
-	}
 
 }
