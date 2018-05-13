@@ -33,6 +33,16 @@ public class Hand {
 		hand.add(deckHolder.dealCard());
 		return hand;
 	}
+	
+	public int checkCardRankForAce(List<Card> hand) {
+		int aceCheck = 0;
+		for (Card card : hand) {
+			if(card.getRank() == Rank.ACE) {
+				aceCheck++;
+			}
+		}
+		return aceCheck; 
+	}
 
 
 }

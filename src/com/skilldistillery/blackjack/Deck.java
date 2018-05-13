@@ -30,5 +30,15 @@ public class Deck {
 		return dealtCard;
 		
 	}
+	
+	public boolean checkCardRankForAce(List<Card> cards) {
+		boolean aceCheck = false;
+		for (Card card : cards) {
+			if(card.getRank() == Rank.ACE) {
+				aceCheck = true;
+			}
+		}
+		return aceCheck; 
+	}
 
 }

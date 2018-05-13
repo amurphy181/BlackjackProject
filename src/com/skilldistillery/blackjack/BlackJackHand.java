@@ -21,16 +21,18 @@ public class BlackJackHand {
 
 	public void run() {
 		Deck deck = new Deck();
-		List<Card> playerHand = new LinkedList<>();
+		List<Card> playerHand = new ArrayList<>();
 		List<Card> dealerHand = new ArrayList<>();
 		Hand actOnHands = new Hand();
 		boolean gameContinue = true;
 		Scanner input = new Scanner(System.in);
 
 		boolean handContinue = true;
+		boolean dealerContinue = true;
 
 		while (gameContinue) {
 
+			// shuffle, then add two cards each in dealing order (player first)
 			deck.shuffle();
 
 			playerHand.add(deck.dealCard());
@@ -38,9 +40,14 @@ public class BlackJackHand {
 			playerHand.add(deck.dealCard());
 			dealerHand.add(deck.dealCard());
 
+			deck.shuffle();
+			System.out.println("Deck length, post-deal: " + deck.checkDeckSize());
+
+			// maintain a count of the rank value of each player's hand
 			int phCount = actOnHands.getHandValue(playerHand);
 			int dealerCount = actOnHands.getHandValue(dealerHand);
 
+			// determine whether one or both candidates got a blackjack
 			if (dealerCount == 21 && dealerCount > phCount) {
 				System.out.println("Dealer wins with a Blackjack!");
 				handContinue = false;
@@ -62,10 +69,29 @@ public class BlackJackHand {
 				int totalCardsInHand = 2;
 
 				if ((userChoice.equals("Hit") || userChoice.equals("hit")) && (handContinue == true)) {
-					// check for going over on an ace if the current player hand count is more than
-					// 11
+					// check for going over on an ace if the current player hand count is more than 11
 					// this is the part that needs to be fixed! bugs all over here
-					if (phCount >= 11) {
+					while (phCount < 11 && handContinue) {
+						playerHand.addAll(actOnHands.addCard());
+						phCount = actOnHands.getHandValue(playerHand);
+						totalCardsInHand++;
+						System.out.println("Player count: " + phCount + "\nPlayer hand: " + playerHand.toString());
+						System.out.println("Hit again?");
+						userChoice = input.nextLine();
+						if ((userChoice.equals("hit") || userChoice.equals("Hit")) && phCount < 11) {
+							handContinue = true;
+							continue;
+						} 
+						else if ((userChoice.equals("hit") || userChoice.equals("Hit")) && phCount >= 11) {
+							break;
+						}
+						else {
+							handContinue = false;
+						}
+					}
+					
+
+					while (phCount >= 11 && handContinue) {
 						playerHand.addAll(actOnHands.addCard());
 						int aceTracker = phCount + 11;
 						phCount = actOnHands.getHandValue(playerHand);
@@ -73,21 +99,26 @@ public class BlackJackHand {
 						totalCardsInHand++;
 						Card lastCardDealt = playerHand.get(totalCardsInHand - 1);
 						System.out.println("Card dealt was a : " + lastCardDealt.toString());
-						if ((phCount == aceTracker) && totalCardsInHand == 3) {
-
-							phCount = phCount - 10;
-						} else if ((phCount == aceTracker) && totalCardsInHand == 4) {
-							phCount = phCount - 20;
+						
+						if(actOnHands.checkCardRankForAce(playerHand) >= 1) {
+							int totalAces = actOnHands.checkCardRankForAce(playerHand);
+							phCount = phCount - ((totalAces) *10);
+							break;
 						}
+//						
+//						if ((phCount == aceTracker) && totalCardsInHand == 3) {
+//
+//							phCount = phCount - 10;
+//							break;
+//						} else if ((phCount == aceTracker) && totalCardsInHand == 4) {
+//							phCount = phCount - 20;
+//							break;
+//						}
 						if (phCount == 21) {
 							System.out.println("Player has 21: will the dealer be able to match?");
 							break;
 						}
-					} else {
-						playerHand.addAll(actOnHands.addCard());
-						phCount = actOnHands.getHandValue(playerHand);
 					}
-
 					// phCount = actOnHands.getHandValue(playerHand);
 					System.out.println(phCount);
 					if (phCount > 21) {
@@ -101,7 +132,7 @@ public class BlackJackHand {
 				}
 			}
 
-			while (dealerCount < 17 && phCount <= 21 && handContinue) {
+			while (dealerCount < 17 && phCount <= 21 && gameContinue) {
 				dealerHand.add(deck.dealCard());
 				dealerCount = actOnHands.getHandValue(dealerHand);
 				if (dealerCount > 21) {
@@ -129,7 +160,12 @@ public class BlackJackHand {
 			if (gameContinueChoice == "No" || gameContinueChoice == "no") {
 				gameContinue = false;
 			} else {
-				continue;
+				phCount = 0;
+				playerHand.clear();
+				handContinue = true;
+				dealerCount = 0;
+				dealerHand.clear();
+				// continue;
 			}
 
 		}
