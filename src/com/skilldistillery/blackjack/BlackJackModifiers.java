@@ -40,7 +40,7 @@ public class BlackJackModifiers {
 				playerHand.add(deck.dealCard());
 				playerCount = actOnHands.getHandValue(playerHand);
 				totalCardsInHand++;
-				System.out.println("Player count: " + playerCount + "\nPlayer hand: " + playerHand.toString());
+				System.out.println("Player count: " + playerCount + "\nPlayer hand: " + actOnHands.printHand(playerHand));
 				System.out.println("\nHit again?");
 				userChoice = input.nextLine();
 				if ((userChoice.equals("hit") || userChoice.equals("Hit")) && playerCount < 11) {

@@ -1,8 +1,6 @@
 package com.skilldistillery.blackjack;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,7 +30,7 @@ public class BlackJackHand {
 
 		while (gameContinue) {
 			
-			if(deck.checkDeckSize() < 40) {
+			if(deck.checkDeckSize() < 20) { // creates a new deck so that it will never run out, saving from NullPointerExceptions!
 				deck = new Deck();
 			}
 
@@ -42,11 +40,8 @@ public class BlackJackHand {
 			dealerHand = bjm.dealCardToDealer(deck);
 			playerHand = bjm.dealCardToPlayer(deck);
 			dealerHand = bjm.dealCardToDealer(deck);
-
 			deck.shuffle();
 			
-			System.out.println("Deck length, post-deal: " + deck.checkDeckSize());
-
 			// maintain a count of the rank value of each player's hand
 			int playerCount = actOnHands.getHandValue(playerHand);
 			int dealerCount = actOnHands.getHandValue(dealerHand);
@@ -77,6 +72,7 @@ public class BlackJackHand {
 			// dealer comes back to play; short series of code
 
 			while (dealerCount < 17 && playerCount <= 21 && gameContinue) {
+				System.out.println("\nThe dealer is taking a card...\n");
 				dealerHand.add(deck.dealCard());
 				dealerCount = actOnHands.getHandValue(dealerHand);
 				if (dealerCount > 21) {
@@ -103,6 +99,7 @@ public class BlackJackHand {
 				// continue;
 			} else {
 				System.out.println("Thanks for playing at Kurmudgeon's Kasino! \nAnd remember, the house alllways wins.");
+				input.close();
 				System.exit(0);
 			}
 
