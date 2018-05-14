@@ -58,57 +58,41 @@ public class BlackJackHand {
 
 			while (handContinue) {
 				Card dealerCardShowing = dealerHand.get(1);
-				System.out.println("Dealer is showing a " + dealerCardShowing);
-
-				System.out.println("Player count: " + playerCount + "\nPlayer hand: " + playerHand.toString());
+				System.out.println("Dealer is showing a " + dealerCardShowing + "\n");
+				System.out.println("Player count: " + playerCount + "\nPlayer hand:\n" + actOnHands.printHand(playerHand));
 				System.out.println("Hit or hold?");
 				String userChoice = input.nextLine();
 				
-				// see if we can't get this to a different class
+				// the player parts were fairly extensive, and so now reside in the BlackJackModifiers class
 				handContinue = bjm.playerGamePlay(userChoice, handContinue, input);
 				playerCount = actOnHands.getHandValue(playerHand);
-				System.out.println("Player count: " + playerCount + "\nPlayer hand: " + playerHand.toString());
-				
+				System.out.println("Player count: " + playerCount + "\nPlayer hand:\n" + actOnHands.printHand(playerHand));
 				
 				if(playerCount > 21) {
 					gameContinue = false;
 				}
 				
 			}
+			
+			// dealer comes back to play; short series of code
 
 			while (dealerCount < 17 && playerCount <= 21 && gameContinue) {
 				dealerHand.add(deck.dealCard());
 				dealerCount = actOnHands.getHandValue(dealerHand);
-				if (actOnHands.checkCardRankForAce(dealerHand) >= 1) {
-					int totalAces = actOnHands.checkCardRankForAce(dealerHand);
-					if (dealerCount > 21) {
-						dealerCount = dealerCount - ((totalAces - 1) * 10); // take one ace off, test to see if still above 21
-						totalAces--;  
-						if (dealerCount > 21) {
-							dealerCount = dealerCount - ((totalAces - 1) * 10); 
-							totalAces--;  
-						}
-					}
-					break;
-				}
 				if (dealerCount > 21) {
 					System.out.println("Dealer busts!");
 
 				}
 			}
 			
+			// this will print out the win conditions based on highest score or tied score
 			bjm.winConditions(playerCount, dealerCount);
 
-
-			System.out.println("\nPlayer hand count: " + playerCount);
-			System.out.println("Dealer hand count: " + dealerCount);
-			System.out.println("Player's hand: " + playerHand.toString());
-			System.out.println("Dealer's hand: " + dealerHand.toString());
-
-			System.out.print("Play again? Yes or no: ");
-
+			// print outcome, hands
+			bjm.finalOutcomePrintOut(playerCount, dealerCount);
+			
+			// take input after the prompt in the "finalOutcomePrintOut"
 			String gameContinueChoice = input.nextLine();
-
 			if (gameContinueChoice.equals("Yes") || gameContinueChoice.equals("yes")) {
 				playerCount = 0;
 				playerHand.clear();
@@ -118,7 +102,7 @@ public class BlackJackHand {
 				gameContinue = true;
 				// continue;
 			} else {
-				System.out.println("Thanks for playing! Remember, the house always wins.");
+				System.out.println("Thanks for playing at Kurmudgeon's Kasino! \nAnd remember, the house alllways wins.");
 				System.exit(0);
 			}
 

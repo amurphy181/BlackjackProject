@@ -30,23 +30,23 @@ public class BlackJackModifiers {
 
 	public boolean playerGamePlay(String userChoice, boolean handContinue, Scanner input) {
 		int totalCardsInHand = 2;
-		int phCount = actOnHands.getHandValue(playerHand);
+		int playerCount = actOnHands.getHandValue(playerHand);
 		int dealerCount = actOnHands.getHandValue(dealerHand);
 
-		if ((userChoice.equals("Hit") || userChoice.equals("hit")) && (handContinue == true) && phCount < 11) {
+		if ((userChoice.equals("Hit") || userChoice.equals("hit")) && (handContinue == true) && playerCount < 11) {
 			// check for going over on an ace if the current player hand count is more than
 			// 11
-			while (phCount < 11 && handContinue) {
+			while (playerCount < 11 && handContinue) {
 				playerHand.add(deck.dealCard());
-				phCount = actOnHands.getHandValue(playerHand);
+				playerCount = actOnHands.getHandValue(playerHand);
 				totalCardsInHand++;
-				System.out.println("Player count: " + phCount + "\nPlayer hand: " + playerHand.toString());
+				System.out.println("Player count: " + playerCount + "\nPlayer hand: " + playerHand.toString());
 				System.out.println("\nHit again?");
 				userChoice = input.nextLine();
-				if ((userChoice.equals("hit") || userChoice.equals("Hit")) && phCount < 11) {
+				if ((userChoice.equals("hit") || userChoice.equals("Hit")) && playerCount < 11) {
 					handContinue = true;
 					continue;
-				} else if ((userChoice.equals("hit") || userChoice.equals("Hit")) && phCount >= 11) {
+				} else if ((userChoice.equals("hit") || userChoice.equals("Hit")) && playerCount >= 11) {
 					break;
 				} else if (userChoice.equals("Hold") || userChoice.equals("hold")) {
 					handContinue = false;
@@ -58,61 +58,55 @@ public class BlackJackModifiers {
 			}
 		}
 
-		if ((userChoice.equals("Hit") || userChoice.equals("hit")) && (handContinue == true) && phCount >= 11) {
+		if ((userChoice.equals("Hit") || userChoice.equals("hit")) && (handContinue == true) && playerCount >= 11) {
 
-			while (phCount >= 11 && handContinue) {
+			while (playerCount >= 11 && handContinue) {
 				deck.shuffle();
 				playerHand.add(deck.dealCard());
-				phCount = actOnHands.getHandValue(playerHand);
+				playerCount = actOnHands.getHandValue(playerHand);
 				totalCardsInHand++;
 				Card lastCardDealt = playerHand.get(totalCardsInHand - 1);
 				System.out.println("Card dealt was a : " + lastCardDealt.toString());
+				System.out.println("Your hand contains the following cards:\n " + actOnHands.printHand(playerHand));
 
-				if (actOnHands.checkCardRankForAce(playerHand) >= 1) {
-					int totalAces = actOnHands.checkCardRankForAce(playerHand);
-					if (phCount > 21) {
-						phCount = phCount - ((totalAces - 1) * 10); // take one ace off, test to see if still above 21
-						totalAces--;  
-						if (phCount > 21) {
-							phCount = phCount - ((totalAces - 1) * 10); 
-							totalAces--;  
-						}
-					}
-					break;
-				}
-				if (phCount == 21) {
+				if (playerCount == 21) {
 					System.out.println("Player has 21: will the dealer be able to match?");
-					break;
-				} else if (phCount > 21) {
-					System.out.println("Bust! Hand stands at " + phCount);
+					handContinue = false;
+					return handContinue;
+				} else if (playerCount > 21) {
+					System.out.println("Bust! Hand stands at " + playerCount);
 					handContinue = false;
 					return handContinue;
 
-				}
-				System.out.println("Hit or hold? Your hand stands at " + phCount);
-				userChoice = input.nextLine();
-				if (userChoice != "hit" || userChoice != "Hit") {
-					handContinue = false;
-					return handContinue;
-				} else if (userChoice == "hit" || userChoice == "Hit") {
-					playerHand.add(deck.dealCard());
-					phCount = actOnHands.getHandValue(playerHand);
-					totalCardsInHand++;
-					lastCardDealt = playerHand.get(totalCardsInHand - 1);
-					System.out.println("Card dealt was a : " + lastCardDealt.toString());
-					
+				} else if (playerCount < 21) {
+					System.out.println("Hit or hold? Your hand stands at " + playerCount);
+					userChoice = input.nextLine();
+					if (userChoice.equals("hit") || userChoice.equals("Hit")) {
+						playerHand.add(deck.dealCard());
+						playerCount = actOnHands.getHandValue(playerHand);
+						totalCardsInHand++;
+						lastCardDealt = playerHand.get(totalCardsInHand - 1);
+						System.out.println("Card dealt was a : " + lastCardDealt.toString());
+						input.nextLine();
+						break;
+					} else {
+						handContinue = false;
+						return handContinue;
+					}
 				}
 
 			}
 			// phCount = actOnHands.getHandValue(playerHand);
-			System.out.println(phCount);
-			if (phCount > 21) {
+			System.out.println(playerCount);
+			if (playerCount > 21) {
 				System.out.println("Oooooohhhhh busteddddd, dealer wins");
 				System.out.println("Dealer had a " + dealerCount);
 				handContinue = false;
 			}
 
-		} else if (userChoice.equals("Hold") || userChoice.equals("hold")) {
+		} else if (userChoice.equals("Hold") || userChoice.equals("hold"))
+
+		{
 			handContinue = false;
 			return handContinue;
 		}
@@ -144,5 +138,14 @@ public class BlackJackModifiers {
 			handContinue = false;
 		}
 		return handContinue;
+	}
+	
+	public void finalOutcomePrintOut(int playerCount, int dealerCount) {
+		System.out.println("Player hand count: " + playerCount);
+		System.out.println("Dealer hand count: " + dealerCount);
+		System.out.println("\nYou finished the hand with the following cards:\n" + actOnHands.printHand(playerHand));
+		System.out.println("The dealer finished the hand with the following cards:\n" + actOnHands.printHand(dealerHand));
+
+		System.out.print("Play again? Yes or no: ");
 	}
 }
